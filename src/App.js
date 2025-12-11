@@ -52,30 +52,10 @@ function App() {
       <header className="nav">
         <div className="brand">CEBU TOUR</div>
         <nav className="nav-links">
-          <button
-            onClick={() => setPage("home")}
-            className={page === "home" ? "active" : ""}
-          >
-            Home
-          </button>
-          <button
-            onClick={() => setPage("tour")}
-            className={page === "tour" ? "active" : ""}
-          >
-            Tour
-          </button>
-          <button
-            onClick={() => setPage("cert")}
-            className={page === "cert" ? "active" : ""}
-          >
-            Certificate
-          </button>
-          <button
-            onClick={() => setPage("about")}
-            className={page === "about" ? "active" : ""}
-          >
-            About
-          </button>
+          <button onClick={() => setPage("home")} className={page === "home" ? "active" : ""}>Home</button>
+          <button onClick={() => setPage("tour")} className={page === "tour" ? "active" : ""}>Tour</button>
+          <button onClick={() => setPage("cert")} className={page === "cert" ? "active" : ""}>Certificate</button>
+          <button onClick={() => setPage("about")} className={page === "about" ? "active" : ""}>About</button>
         </nav>
       </header>
 
@@ -103,16 +83,12 @@ function Home({ setPage }) {
             MY EDUCATIONAL <span className="highlight">TOUR</span>
           </h1>
           <p className="hero-desc">
-           A three-day educational tour in Cebu that provided immersive learning experiences through 
-           visits to various companies and institutions.
+            A three-day educational tour in Cebu that provided immersive learning
+            experiences through visits to various companies and institutions.
           </p>
           <div className="hero-buttons">
-            <button className="btn primary" onClick={() => setPage("tour")}>
-              View Tour
-            </button>
-            <button className="btn ghost" onClick={() => setPage("cert")}>
-              View Certificate
-            </button>
+            <button className="btn primary" onClick={() => setPage("tour")}>View Tour</button>
+            <button className="btn ghost" onClick={() => setPage("cert")}>View Certificate</button>
           </div>
         </div>
         <div className="hero-photo">
@@ -124,6 +100,13 @@ function Home({ setPage }) {
 }
 
 function Tour() {
+  const [activePhoto, setActivePhoto] = useState(null);
+
+  const handleClick = (dayNumber, idx) => {
+    setActivePhoto(`${dayNumber}-${idx}`);
+    setTimeout(() => setActivePhoto(null), 300);
+  };
+
   return (
     <div className="tour-page">
       <h1 className="page-title">Tour Highlights — 3 Days</h1>
@@ -136,7 +119,11 @@ function Tour() {
           <p className="day-notes">{d.notes}</p>
           <div className="day-photos">
             {d.photos.map((src, idx) => (
-              <div className="photo-wrapper" key={idx}>
+              <div
+                className={`photo-wrapper ${activePhoto === `${d.dayNumber}-${idx}` ? "clicked" : ""}`}
+                key={idx}
+                onClick={() => handleClick(d.dayNumber, idx)}
+              >
                 <img src={src} alt={`Day ${d.dayNumber} - ${idx + 1}`} />
               </div>
             ))}
@@ -150,30 +137,10 @@ function Tour() {
 function Certificate({ setPage }) {
   return (
     <div className="certificate-page">
-      <div className="certificate-container">
-        <h1 className="cert-title">Certificate</h1>
-        <div className="cert-body">
-          <h2 className="cert-of">Certificate of Completion</h2>
-          <p className="cert-intro">This certifies that</p>
-          <p className="cert-name">{tour.studentName}</p>
-          <p className="cert-details">
-            {tour.course} • Grade: {tour.grade}
-          </p>
-          <div className="cert-footer">
-            <div className="cert-issuer">
-              <p>Issued by</p>
-              <p className="issuer-school">{tour.school}</p>
-            </div>
-            <div className="cert-date">
-              <p>Date: {new Date().toLocaleDateString()}</p>
-            </div>
-            <div className="cert-signature-area">
-              <div className="signature-line"></div>
-              <p className="signature-title">Sir Owen Pilongo</p>
-            </div>
-          </div>
-        </div>
+      <div className="certificate-container cert-image-wrapper">
+        <img src="/images/certificate.jpg" alt="Certificate" className="certificate-img" />
       </div>
+
       <button
         className="btn primary print-button"
         onClick={() => {
@@ -190,12 +157,28 @@ function Certificate({ setPage }) {
 function About() {
   return (
     <div className="about-page">
-      <h1 className="page-title">About This Portfolio</h1>
-      <p className="about-intro">
-        This portfolio documents the 3-day educational tour in Cebu, highlighting cultural,
-        historical, and natural experiences. All images are visible only when viewing the Tour
-        section.
-      </p>
+      <h1 className="page-title">About Me</h1>
+      <div className="about-card">
+        <img src="/images/profile.jpeg" alt="Profile" className="about-photo" />
+        <div className="about-info">
+          <h2 className="about-name">{tour.studentName}</h2>
+          <p className="about-role">{tour.course} Student</p>
+          <p className="about-text">
+            I'm a 21-year-old BSIT student from Holy Cross of Davao College. Passionate about technology,
+            programming, and continuously learning skills that help me grow in the IT field.
+            <br /><br />
+            This portfolio documents my educational tour in Cebu, showcasing real-world exposure to IT companies,
+            modern systems, and the experiences that helped shape my academic journey.
+          </p>
+          <div className="about-details">
+            <p><strong>Email:</strong> travisjohn.villanueva@hcdc.edu.ph</p>
+            <p><strong>Age:</strong> 21</p>
+          </div>
+          <a href="https://www.facebook.com/travisjohn.villanueva.1" target="_blank" rel="noopener noreferrer" className="btn primary fb-button">
+            Visit My Facebook
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
@@ -205,7 +188,7 @@ const stylesCSS = `
 --bg-dark:#0a122a;
 --accent:#38bdf8;
 --text-light:#eef6ff;
---card-bg:rgba(255,255,255,0.05);
+--card-bg:rgba(255,255,255,0.08);
 --shadow:0 12px 40px rgba(0,0,0,0.55);
 }
 body, html, #root{
@@ -235,7 +218,7 @@ background:var(--accent);color:#0a122a;
 .container{flex:1;padding:40px 6%;max-width:1200px;margin:0 auto;}
 .footer{text-align:center;padding:20px;border-top:1px solid rgba(255,255,255,0.1);color:var(--text-light);}
 
-/* Modern Hero */
+/* HERO */
 .hero-modern{
 display:flex;justify-content:space-between;align-items:center;
 gap:40px;min-height:80vh;
@@ -263,44 +246,143 @@ margin-right:10px;transition:all .3s;
 .btn.ghost:hover{background:rgba(56,189,248,0.1);}
 .hero-photo img{
 width:380px;border-radius:20px;box-shadow:var(--shadow);object-fit:cover;
+transition:transform .3s, box-shadow .3s;
+}
+.hero-photo img:hover{
+transform:scale(1.05);
+box-shadow:0 20px 50px rgba(0,0,0,0.7);
 }
 
-/* Tour Page */
+/* TOUR */
 .tour-page .page-title{
 font-size:2.5rem;text-align:center;margin-bottom:40px;color:var(--accent);
 }
 .day-card{
 background:var(--card-bg);border-radius:15px;
 padding:30px;margin-bottom:30px;box-shadow:var(--shadow);
+transition:transform .3s;
+}
+.day-card:hover{
+transform:translateY(-5px) scale(1.01);
 }
 .day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;}
 .day-header h2{color:var(--accent);}
 .day-date{color:rgba(255,255,255,0.7);}
 .day-notes{color:white;font-size:1.1rem;margin-bottom:25px;}
 .day-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;}
-.photo-wrapper img{width:100%;height:150px;object-fit:cover;border-radius:8px;transition:.3s;}
-.photo-wrapper:hover img{transform:scale(1.05);}
+.photo-wrapper{
+  overflow:hidden;
+  border-radius:10px;
+  cursor:pointer;
+  transition:transform .3s, box-shadow .3s;
+}
+.photo-wrapper img{
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  transition:transform .3s, filter .3s;
+}
+.photo-wrapper:hover img{
+  transform:scale(1.1);
+  filter:brightness(1.1);
+}
+.photo-wrapper.clicked img{
+  transform:scale(0.95);
+  filter:brightness(0.9);
+  transition:.15s;
+}
 
-/* Certificate */
-.certificate-page{display:flex;flex-direction:column;align-items:center;}
-.certificate-container{background:white;color:#0a122a;padding:40px;border-radius:15px;width:100%;max-width:850px;box-shadow:var(--shadow);}
-.cert-title{text-align:center;font-size:2rem;color:var(--accent);border-bottom:3px double var(--accent);padding-bottom:10px;margin-bottom:30px;}
-.cert-name{font-size:3rem;font-weight:900;color:var(--accent);margin:15px 0;}
-.cert-details{font-size:1.3rem;margin-bottom:50px;}
-.cert-footer{display:flex;justify-content:space-around;align-items:flex-end;margin-top:50px;}
-.signature-line{border-top:2px solid #333;width:200px;margin:0 auto 5px auto;}
-.signature-title{font-size:0.9rem;}
+/* CERTIFICATE PAGE */
+.certificate-page{
+display:flex;flex-direction:column;align-items:center;
+}
+.certificate-container{
+background:white;color:#0a122a;padding:40px;border-radius:15px;
+width:100%;max-width:850px;box-shadow:var(--shadow);
+}
+.cert-image-wrapper{padding:0 !important;background:white;}
+.certificate-img{width:100%;border-radius:10px;display:block;}
 
-/* About */
+/* ABOUT ME */
 .about-page{text-align:center;}
-.about-intro{font-size:1.1rem;line-height:1.6;color:rgba(255,255,255,0.8);margin-bottom:40px;}
+.about-card{
+  background:var(--card-bg);
+  padding:30px 40px;
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  max-width:800px;
+  margin:40px auto;
+  display:flex;
+  gap:30px;
+  align-items:center;
+  transition:transform .3s;
+}
+.about-card:hover{transform:translateY(-5px);}
+.about-photo{
+  width:180px;
+  height:180px;
+  object-fit:cover;
+  border-radius:15px;
+  border:3px solid var(--accent);
+  box-shadow:var(--shadow);
+  transition:transform .3s, box-shadow .3s;
+}
+.about-photo:hover{
+  transform:scale(1.05);
+  box-shadow:0 20px 50px rgba(0,0,0,0.7);
+}
+.about-info{text-align:left;flex:1;}
+.about-name{
+  font-size:1.6rem;
+  font-weight:800;
+  color:var(--accent);
+  margin-bottom:5px;
+}
+.about-role{
+  font-size:1.05rem;
+  color:rgba(255,255,255,0.7);
+  margin-bottom:15px;
+}
+.about-text{
+  font-size:1rem;
+  line-height:1.6;
+  margin-bottom:20px;
+  color:rgba(255,255,255,0.85);
+}
+.about-details p{
+  margin:5px 0;
+  font-size:0.95rem;
+}
+.fb-button{
+  margin-top:15px;
+  background:var(--accent);
+  color:#0a122a;
+  font-weight:700;
+  text-decoration:none;
+}
+.fb-button:hover{
+  transform:scale(1.05);
+}
 
-/* Responsive */
-@media (max-width: 768px){
+/* PRINT MODE */
+@media print {
+  .nav, .footer, .print-button {display:none !important;}
+  body{background:white !important;}
+  .certificate-container{
+    box-shadow:none !important;
+    padding:0 !important;
+    margin:0 !important;
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width:768px){
 .hero-modern{flex-direction:column;text-align:center;}
 .hero-photo img{width:250px;}
 .day-photos{grid-template-columns:1fr 1fr;}
-.cert-footer{flex-direction:column;gap:30px;margin-top:30px;}
+.about-card{flex-direction:column;text-align:center;}
+.about-info{text-align:center;}
+.about-photo{margin-bottom:20px;}
 }
 `;
 
